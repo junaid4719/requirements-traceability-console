@@ -120,3 +120,107 @@
 2026-08-15 20:14:31,509 - WARNING - Fault detected at row 1: engine_temp_c=120.0 (expected 0-110)
 2026-08-15 20:14:31,509 - INFO - Analysis complete. 1 fault(s) found.
 2026-08-15 20:14:31,510 - INFO - 127.0.0.1 - - [15/Aug/2026 20:14:31] "POST /api/run HTTP/1.1" 200 -
+2026-08-15 20:26:44,996 - INFO - Analysis complete. 0 fault(s) found.
+2026-08-15 20:26:45,003 - WARNING - Fault detected at row 1: rpm=7200.0 (expected 0-6500)
+2026-08-15 20:26:45,003 - INFO - Analysis complete. 1 fault(s) found.
+2026-08-15 20:26:45,011 - WARNING - Fault detected at row 1: battery_voltage=10.2 (expected 11.5-14.8)
+2026-08-15 20:26:45,011 - INFO - Analysis complete. 1 fault(s) found.
+2026-08-15 20:26:45,018 - WARNING - Fault detected at row 1: rpm=7200.0 (expected 0-6500)
+2026-08-15 20:26:45,018 - WARNING - Fault detected at row 1: battery_voltage=10.2 (expected 11.5-14.8)
+2026-08-15 20:26:45,019 - INFO - Analysis complete. 2 fault(s) found.
+2026-08-15 20:26:45,027 - INFO - Analysis complete. 0 fault(s) found.
+2026-08-15 20:26:45,031 - ERROR - Log file not found: C:\Users\44753\AppData\Local\Temp\tmpdnjimd36\does_not_exist.csv
+2026-08-15 20:26:45,039 - INFO - Analysis complete. 0 fault(s) found.
+2026-08-15 20:26:45,041 - INFO - 127.0.0.1 - - [15/Aug/2026 20:26:45] "POST /api/run HTTP/1.1" 200 -
+2026-08-15 20:27:10,842 - INFO -  * Detected change in 'C:\\Users\\44753\\Downloads\\a\\requirements-traceability-console\\dashboard-project\\log_analyser.py', reloading
+2026-08-15 20:27:14,755 - WARNING - Fault detected at row 1: engine_temp_c=115.0 (expected 0-110)
+2026-08-15 20:27:14,755 - INFO - Analysis complete. 1 fault(s) found.
+2026-08-15 20:27:14,764 - WARNING - Fault detected at row 1: rpm=7200.0 (expected 0-6500)
+2026-08-15 20:27:14,765 - INFO - Analysis complete. 1 fault(s) found.
+2026-08-15 20:27:14,772 - WARNING - Fault detected at row 1: battery_voltage=10.2 (expected 11.5-14.8)
+2026-08-15 20:27:14,772 - INFO - Analysis complete. 1 fault(s) found.
+2026-08-15 20:27:14,779 - WARNING - Fault detected at row 1: engine_temp_c=115.0 (expected 0-110)
+2026-08-15 20:27:14,779 - WARNING - Fault detected at row 1: rpm=7200.0 (expected 0-6500)
+2026-08-15 20:27:14,779 - WARNING - Fault detected at row 1: battery_voltage=10.2 (expected 11.5-14.8)
+2026-08-15 20:27:14,779 - INFO - Analysis complete. 3 fault(s) found.
+2026-08-15 20:27:14,786 - INFO - Analysis complete. 0 fault(s) found.
+2026-08-15 20:27:14,788 - ERROR - Log file not found: C:\Users\44753\AppData\Local\Temp\tmpfymf740s\does_not_exist.csv
+2026-08-15 20:27:14,794 - WARNING - Fault detected at row 1: engine_temp_c=120.0 (expected 0-110)
+2026-08-15 20:27:14,794 - INFO - Analysis complete. 1 fault(s) found.
+2026-08-15 20:27:14,795 - INFO - 127.0.0.1 - - [15/Aug/2026 20:27:14] "POST /api/run HTTP/1.1" 200 -
+2026-08-15 20:27:52,719 - WARNING - Fault detected at row 1: engine_temp_c=115.0 (expected 0-110)
+2026-08-15 20:27:52,720 - INFO - Analysis complete. 1 fault(s) found.
+2026-08-15 20:27:52,726 - WARNING - Fault detected at row 1: rpm=7200.0 (expected 0-6500)
+2026-08-15 20:27:52,727 - INFO - Analysis complete. 1 fault(s) found.
+2026-08-15 20:27:52,734 - WARNING - Fault detected at row 1: battery_voltage=10.2 (expected 11.5-14.8)
+2026-08-15 20:27:52,734 - INFO - Analysis complete. 1 fault(s) found.
+2026-08-15 20:27:52,738 - WARNING - Fault detected at row 1: engine_temp_c=115.0 (expected 0-110)
+2026-08-15 20:27:52,738 - WARNING - Fault detected at row 1: rpm=7200.0 (expected 0-6500)
+2026-08-15 20:27:52,738 - WARNING - Fault detected at row 1: battery_voltage=10.2 (expected 11.5-14.8)
+2026-08-15 20:27:52,738 - INFO - Analysis complete. 3 fault(s) found.
+2026-08-15 20:27:52,743 - INFO - Analysis complete. 0 fault(s) found.
+2026-08-15 20:27:52,745 - ERROR - Log file not found: C:\Users\44753\AppData\Local\Temp\tmplhu30p0f\does_not_exist.csv
+2026-08-15 20:27:52,750 - WARNING - Fault detected at row 1: engine_temp_c=120.0 (expected 0-110)
+2026-08-15 20:27:52,750 - INFO - Analysis complete. 1 fault(s) found.
+2026-08-15 20:27:52,751 - INFO - 127.0.0.1 - - [15/Aug/2026 20:27:52] "POST /api/run HTTP/1.1" 200 -
+2026-08-15 20:28:42,740 - INFO - 127.0.0.1 - - [15/Aug/2026 20:28:42] "GET / HTTP/1.1" 200 -
+2026-08-15 20:28:43,041 - INFO - 127.0.0.1 - - [15/Aug/2026 20:28:43] "GET /api/matrix HTTP/1.1" 200 -
+2026-08-15 20:28:45,819 - WARNING - Fault detected at row 1: engine_temp_c=115.0 (expected 0-110)
+2026-08-15 20:28:45,820 - INFO - Analysis complete. 1 fault(s) found.
+2026-08-15 20:28:45,827 - WARNING - Fault detected at row 1: rpm=7200.0 (expected 0-6500)
+2026-08-15 20:28:45,828 - INFO - Analysis complete. 1 fault(s) found.
+2026-08-15 20:28:45,834 - WARNING - Fault detected at row 1: battery_voltage=10.2 (expected 11.5-14.8)
+2026-08-15 20:28:45,834 - INFO - Analysis complete. 1 fault(s) found.
+2026-08-15 20:28:45,840 - WARNING - Fault detected at row 1: engine_temp_c=115.0 (expected 0-110)
+2026-08-15 20:28:45,840 - WARNING - Fault detected at row 1: rpm=7200.0 (expected 0-6500)
+2026-08-15 20:28:45,840 - WARNING - Fault detected at row 1: battery_voltage=10.2 (expected 11.5-14.8)
+2026-08-15 20:28:45,840 - INFO - Analysis complete. 3 fault(s) found.
+2026-08-15 20:28:45,845 - INFO - Analysis complete. 0 fault(s) found.
+2026-08-15 20:28:45,847 - ERROR - Log file not found: C:\Users\44753\AppData\Local\Temp\tmpm1l0i3ie\does_not_exist.csv
+2026-08-15 20:28:45,851 - WARNING - Fault detected at row 1: engine_temp_c=120.0 (expected 0-110)
+2026-08-15 20:28:45,852 - INFO - Analysis complete. 1 fault(s) found.
+2026-08-15 20:28:45,853 - INFO - 127.0.0.1 - - [15/Aug/2026 20:28:45] "POST /api/run HTTP/1.1" 200 -
+2026-08-15 20:28:46,989 - WARNING - Fault detected at row 1: engine_temp_c=115.0 (expected 0-110)
+2026-08-15 20:28:46,990 - INFO - Analysis complete. 1 fault(s) found.
+2026-08-15 20:28:46,995 - WARNING - Fault detected at row 1: rpm=7200.0 (expected 0-6500)
+2026-08-15 20:28:46,996 - INFO - Analysis complete. 1 fault(s) found.
+2026-08-15 20:28:47,001 - WARNING - Fault detected at row 1: battery_voltage=10.2 (expected 11.5-14.8)
+2026-08-15 20:28:47,001 - INFO - Analysis complete. 1 fault(s) found.
+2026-08-15 20:28:47,005 - WARNING - Fault detected at row 1: engine_temp_c=115.0 (expected 0-110)
+2026-08-15 20:28:47,005 - WARNING - Fault detected at row 1: rpm=7200.0 (expected 0-6500)
+2026-08-15 20:28:47,006 - WARNING - Fault detected at row 1: battery_voltage=10.2 (expected 11.5-14.8)
+2026-08-15 20:28:47,006 - INFO - Analysis complete. 3 fault(s) found.
+2026-08-15 20:28:47,012 - INFO - Analysis complete. 0 fault(s) found.
+2026-08-15 20:28:47,015 - ERROR - Log file not found: C:\Users\44753\AppData\Local\Temp\tmpm68z1fvq\does_not_exist.csv
+2026-08-15 20:28:47,019 - WARNING - Fault detected at row 1: engine_temp_c=120.0 (expected 0-110)
+2026-08-15 20:28:47,019 - INFO - Analysis complete. 1 fault(s) found.
+2026-08-15 20:28:47,021 - INFO - 127.0.0.1 - - [15/Aug/2026 20:28:47] "POST /api/run HTTP/1.1" 200 -
+2026-08-15 20:28:48,025 - WARNING - Fault detected at row 1: engine_temp_c=115.0 (expected 0-110)
+2026-08-15 20:28:48,026 - INFO - Analysis complete. 1 fault(s) found.
+2026-08-15 20:28:48,032 - WARNING - Fault detected at row 1: rpm=7200.0 (expected 0-6500)
+2026-08-15 20:28:48,032 - INFO - Analysis complete. 1 fault(s) found.
+2026-08-15 20:28:48,039 - WARNING - Fault detected at row 1: battery_voltage=10.2 (expected 11.5-14.8)
+2026-08-15 20:28:48,039 - INFO - Analysis complete. 1 fault(s) found.
+2026-08-15 20:28:48,046 - WARNING - Fault detected at row 1: engine_temp_c=115.0 (expected 0-110)
+2026-08-15 20:28:48,046 - WARNING - Fault detected at row 1: rpm=7200.0 (expected 0-6500)
+2026-08-15 20:28:48,046 - WARNING - Fault detected at row 1: battery_voltage=10.2 (expected 11.5-14.8)
+2026-08-15 20:28:48,046 - INFO - Analysis complete. 3 fault(s) found.
+2026-08-15 20:28:48,052 - INFO - Analysis complete. 0 fault(s) found.
+2026-08-15 20:28:48,056 - ERROR - Log file not found: C:\Users\44753\AppData\Local\Temp\tmp2a1xopks\does_not_exist.csv
+2026-08-15 20:28:48,063 - WARNING - Fault detected at row 1: engine_temp_c=120.0 (expected 0-110)
+2026-08-15 20:28:48,063 - INFO - Analysis complete. 1 fault(s) found.
+2026-08-15 20:28:48,066 - INFO - 127.0.0.1 - - [15/Aug/2026 20:28:48] "POST /api/run HTTP/1.1" 200 -
+2026-08-15 20:28:52,188 - INFO -  * Detected change in 'C:\\Users\\44753\\Downloads\\a\\requirements-traceability-console\\dashboard-project\\log_analyser.py', reloading
+2026-08-15 20:28:56,381 - INFO - Analysis complete. 0 fault(s) found.
+2026-08-15 20:28:56,388 - WARNING - Fault detected at row 1: rpm=7200.0 (expected 0-6500)
+2026-08-15 20:28:56,388 - INFO - Analysis complete. 1 fault(s) found.
+2026-08-15 20:28:56,396 - WARNING - Fault detected at row 1: battery_voltage=10.2 (expected 11.5-14.8)
+2026-08-15 20:28:56,396 - INFO - Analysis complete. 1 fault(s) found.
+2026-08-15 20:28:56,403 - WARNING - Fault detected at row 1: rpm=7200.0 (expected 0-6500)
+2026-08-15 20:28:56,403 - WARNING - Fault detected at row 1: battery_voltage=10.2 (expected 11.5-14.8)
+2026-08-15 20:28:56,403 - INFO - Analysis complete. 2 fault(s) found.
+2026-08-15 20:28:56,409 - INFO - Analysis complete. 0 fault(s) found.
+2026-08-15 20:28:56,412 - ERROR - Log file not found: C:\Users\44753\AppData\Local\Temp\tmpxa2tri50\does_not_exist.csv
+2026-08-15 20:28:56,418 - INFO - Analysis complete. 0 fault(s) found.
+2026-08-15 20:28:56,420 - INFO - 127.0.0.1 - - [15/Aug/2026 20:28:56] "POST /api/run HTTP/1.1" 200 -
+2026-08-15 20:29:55,120 - INFO -  * Detected change in 'C:\\Users\\44753\\Downloads\\a\\requirements-traceability-console\\dashboard-project\\log_analyser.py', reloading
