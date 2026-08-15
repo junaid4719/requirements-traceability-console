@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>RTC :: Requirements Traceability Console</title>
+<style>
+  :root {
+    --bg: #050608;
+    --panel-line: #1c2430;
+    --text: #c9d6e3;
+    --dim: #5b6b7c;
+
+    --cyan: #37e5ff;
+    --cyan-dim: #1a6b7a;
+    --magenta: #ff5fd1;
+    --purple: #9d7bff;
+
+    --pass: #3ddc84;
+    --fail: #ff5c5c;
+    --error: #ffb454;
+
+    --mono: "Courier New", Consolas, monospace;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--mono);
+  }
+
+  .topbar {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: 20px 28px;
+    border-bottom: 1px solid var(--panel-line);
+    background: linear-gradient(180deg, #0a0d12 0%, #050608 100%);
+  }
+
+  .brand {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+
+  .brand .mark {
+    font-size: 13px;
+    letter-spacing: 0.15em;
+    color: #05080a;
+    background: var(--cyan);
+    padding: 3px 8px;
+    font-weight: 700;
+    border-radius: 2px;
+  }
+
+  .brand h1 {
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: 0.02em;
+    color: #ffffff;
+  }
+
+  .brand .sub {
+    color: var(--purple);
+    font-size: 12px;
+  }
+
+  .run-btn {
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 0.05em;
+    background: var(--magenta);
+    color: #1a0313;
+    border: none;
+    border-radius: 3px;
+    padding: 10px 18px;
+    cursor: pointer;
+    font-weight: 700;
+  }
+  .run-btn:hover { filter: brightness(1.1); }
+  .run-btn:active { transform: scale(0.98); }
+  .run-btn:disabled { opacity: 0.4; cursor: default; }
+  .run-btn::before { content: "\25B6 "; }
+
+  .summary-strip {
+    display: flex;
+    border-bottom: 1px solid var(--panel-line);
+  }
+
+  .stat {
+    flex: 1;
+    padding: 14px 24px;
+    border-right: 1px solid var(--panel-line);
+  }
+  .stat:last-child { border-right: none; }
+
+  .stat .n {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--pass);
+  }
+
+  .stat .label {
+    color: var(--dim);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  .stat.fail .n { color: var(--fail); }
+  .stat.error .n { color: var(--error); }
+  .stat.notrun .n { color: var(--dim); }
+
+  main {
+    padding: 20px 28px 60px;
+    max-width: 1050px;
+    margin: 0 auto;
+  }
+
+  .matrix-caption {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 8px;
+    font-size: 12px;
+    color: var(--cyan-dim);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  #last-run { color: var(--purple); }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  thead th {
+    text-align: left;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--dim);
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--panel-line);
+  }
+
+  tbody tr {
+    border-bottom: 1px solid var(--panel-line);
+  }
+  tbody tr:hover { background: rgba(55, 229, 255, 0.04); }
+
+  td {
+    padding: 12px;
+    vertical-align: top;
+  }
+
+  .req-id { color: var(--cyan); font-weight: 700; }
+  .req-id::before { content: "$ "; color: var(--dim); }
+  .req-desc { color: var(--text); margin-top: 2px; }
+  .req-cat {
+    display: inline-block;
+    margin-top: 6px;
+    font-size: 10px;
+    color: var(--purple);
+    border: 1px solid rgba(157, 123, 255, 0.35);
+    padding: 1px 6px;
+    border-radius: 2px;
+  }
+
+  .test-id { font-size: 12px; color: var(--dim); }
+  .test-id::before { content: "\2192 "; color: var(--cyan-dim); }
+
+  .status-pill {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    padding: 3px 9px;
+    border-radius: 3px;
+  }
+
+  .status-PASS { color: #061f0f; background: var(--pass); }
+  .status-FAIL { color: #2a0505; background: var(--fail); }
+  .status-ERROR { color: #2a1c00; background: var(--error); }
+  .status-NOTRUN, .status-MISSING {
+    color: var(--dim);
+    background: transparent;
+    border: 1px solid var(--panel-line);
+  }
+
+  .last-run-cell { font-size: 11px; color: var(--dim); }
+
+  .error-text {
+    display: block;
+    margin-top: 6px;
+    font-size: 11px;
+    color: var(--fail);
+    max-width: 240px;
+  }
+
+  footer {
+    text-align: center;
+    color: var(--dim);
+    font-size: 11px;
+    padding: 24px 0 10px;
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <span class="mark">RTC</span>
+    <div>
+      <h1>Requirements Traceability Console</h1>
+      <div class="sub">requirements -&gt; tests -&gt; results, live</div>
+    </div>
+  </div>
+  <button class="run-btn" id="run-btn">RUN ALL TESTS</button>
+</div>
+
+<div class="summary-strip" id="summary-strip"></div>
+
+<main>
+  <div class="matrix-caption">
+    <span>traceability_matrix.log</span>
+    <span id="last-run">no run yet</span>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Requirement</th>
+        <th>Linked Test</th>
+        <th>Status</th>
+        <th>Last Run</th>
+      </tr>
+    </thead>
+    <tbody id="matrix-body"></tbody>
+  </table>
+</main>
+
+<footer>Toolchain Orchestrator Portfolio &mdash; junaid4719</footer>
+
+<script>
+  const runBtn = document.getElementById("run-btn");
+  const matrixBody = document.getElementById("matrix-body");
+  const summaryStrip = document.getElementById("summary-strip");
+  const lastRunLabel = document.getElementById("last-run");
+
+  function renderSummary(summary) {
+    const order = [
+      ["PASS", "", "Passing"],
+      ["FAIL", "fail", "Failing"],
+      ["ERROR", "error", "Errors"],
+      ["NOT RUN", "notrun", "Not Run"],
+    ];
+    summaryStrip.innerHTML = order
+      .map(([key, cls, label]) => `
+        <div class="stat ${cls}">
+          <div class="n">${summary[key] || 0}</div>
+          <div class="label">${label}</div>
+        </div>
+      `)
+      .join("");
+  }
+
+  function renderMatrix(matrix) {
+    matrixBody.innerHTML = matrix
+      .map((row) => {
+        const statusClass = row.status.replace(" ", "");
+        const errorHtml = row.error
+          ? `<span class="error-text">${row.error}</span>`
+          : "";
+        return `
+          <tr>
+            <td>
+              <div class="req-id">${row.id}</div>
+              <div class="req-desc">${row.description}</div>
+              <div class="req-cat">${row.category}</div>
+            </td>
+            <td><span class="test-id">${row.test_id}</span></td>
+            <td>
+              <span class="status-pill status-${statusClass}">${row.status}</span>
+              ${errorHtml}
+            </td>
+            <td class="last-run-cell">${row.last_run || "\u2014"}</td>
+          </tr>
+        `;
+      })
+      .join("");
+  }
+
+  async function loadMatrix() {
+    const res = await fetch("/api/matrix");
+    const data = await res.json();
+    renderSummary(data.summary);
+    renderMatrix(data.matrix);
+  }
+
+  async function runAll() {
+    runBtn.disabled = true;
+    runBtn.textContent = "RUNNING...";
+    try {
+      const res = await fetch("/api/run", { method: "POST" });
+      const data = await res.json();
+      renderSummary(data.summary);
+      renderMatrix(data.matrix);
+      const now = new Date().toLocaleTimeString();
+      lastRunLabel.textContent = `last run: ${now}`;
+    } finally {
+      runBtn.disabled = false;
+      runBtn.textContent = "RUN ALL TESTS";
+    }
+  }
+
+  runBtn.addEventListener("click", runAll);
+  loadMatrix();
+</script>
+
+</body>
+</html>
