@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+fault_report.txt
+log_analyser.log
+thresholds.json

@@ -1,7 +1,0 @@
-VEHICLE LOG ANALYSIS REPORT
-Generated: 2026-08-15 19:40:09.831925
-Source file: sample_vehicle_log.csv
-Total faults found: 0
---------------------------------------------------
-
-No faults detected. All readings within safe range.
