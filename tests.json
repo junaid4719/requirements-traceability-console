@@ -1,0 +1,37 @@
+[
+  {
+    "id": "TEST-001",
+    "function": "test_engine_temp_within_threshold",
+    "description": "Verifies engine temperature readings stay within safe threshold"
+  },
+  {
+    "id": "TEST-002",
+    "function": "test_rpm_within_threshold",
+    "description": "Verifies engine RPM stays within safe threshold"
+  },
+  {
+    "id": "TEST-003",
+    "function": "test_battery_voltage_within_threshold",
+    "description": "Verifies battery voltage stays within safe range"
+  },
+  {
+    "id": "TEST-004",
+    "function": "test_all_faults_detected",
+    "description": "Verifies every out-of-range reading is detected with no false negatives"
+  },
+  {
+    "id": "TEST-005",
+    "function": "test_no_false_positives",
+    "description": "Verifies no fault is raised for entirely valid readings"
+  },
+  {
+    "id": "TEST-006",
+    "function": "test_missing_file_handled_gracefully",
+    "description": "Verifies the system doesn't crash on a missing or unreadable log file"
+  },
+  {
+    "id": "TEST-007",
+    "function": "test_fault_includes_row_and_timestamp",
+    "description": "Verifies every fault is traceable to a specific row and timestamp"
+  }
+]
