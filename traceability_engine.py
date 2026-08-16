@@ -39,7 +39,10 @@ class TraceabilityEngine:
         """Run one test function by name, using a fresh temp folder."""
         test_func = getattr(test_requirements, function_name, None)
         if test_func is None:
-            return {"status": "MISSING", "error": f"No test function named {function_name}"}
+            return {
+                "status": "MISSING",
+                "error": f"No test function named {function_name}",
+            }
 
         with tempfile.TemporaryDirectory() as tmp_dir:
             try:
@@ -58,7 +61,10 @@ class TraceabilityEngine:
             test_def = self.tests_by_id.get(test_ref)
 
             if test_def is None:
-                outcome = {"status": "MISSING", "error": f"No test definition for {test_ref}"}
+                outcome = {
+                    "status": "MISSING",
+                    "error": f"No test definition for {test_ref}",
+                }
             else:
                 outcome = self._run_single_test(test_def["function"])
 
@@ -117,4 +123,3 @@ class TraceabilityEngine:
     def get_evidence_log(self):
         """Return the full history of every evidence record generated so far."""
         return self.evidence
-        
