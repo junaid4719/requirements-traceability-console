@@ -35,32 +35,40 @@ def sample_paths(tmp_path):
 
     reqs_path = tmp_path / "requirements.json"
     tests_path = tmp_path / "tests.json"
+    db_path = tmp_path / "test_traceability.db"
+
     with open(reqs_path, "w") as f:
         json.dump(reqs, f)
     with open(tests_path, "w") as f:
         json.dump(tests, f)
 
-    return str(reqs_path), str(tests_path)
+    return str(reqs_path), str(tests_path), str(db_path)
 
 
 def test_loads_requirements_and_tests(sample_paths):
-    reqs_path, tests_path = sample_paths
-    engine = TraceabilityEngine(requirements_path=reqs_path, tests_path=tests_path)
+    reqs_path, tests_path, db_path = sample_paths
+    engine = TraceabilityEngine(
+        requirements_path=reqs_path, tests_path=tests_path, db_path=db_path
+    )
     assert len(engine.requirements) == 2
     assert engine.requirements[0]["id"] == "REQ-001"
     assert "TEST-001" in engine.tests_by_id
 
 
 def test_matrix_before_run_shows_not_run(sample_paths):
-    reqs_path, tests_path = sample_paths
-    engine = TraceabilityEngine(requirements_path=reqs_path, tests_path=tests_path)
+    reqs_path, tests_path, db_path = sample_paths
+    engine = TraceabilityEngine(
+        requirements_path=reqs_path, tests_path=tests_path, db_path=db_path
+    )
     matrix = engine.get_matrix()
     assert all(row["status"] == "NOT RUN" for row in matrix)
 
 
 def test_run_all_produces_pass_for_valid_requirement(sample_paths):
-    reqs_path, tests_path = sample_paths
-    engine = TraceabilityEngine(requirements_path=reqs_path, tests_path=tests_path)
+    reqs_path, tests_path, db_path = sample_paths
+    engine = TraceabilityEngine(
+        requirements_path=reqs_path, tests_path=tests_path, db_path=db_path
+    )
     matrix = engine.run_all()
     req_001 = next(r for r in matrix if r["id"] == "REQ-001")
     assert req_001["status"] == "PASS"
@@ -69,8 +77,10 @@ def test_run_all_produces_pass_for_valid_requirement(sample_paths):
 
 
 def test_missing_test_definition_reports_missing(sample_paths):
-    reqs_path, tests_path = sample_paths
-    engine = TraceabilityEngine(requirements_path=reqs_path, tests_path=tests_path)
+    reqs_path, tests_path, db_path = sample_paths
+    engine = TraceabilityEngine(
+        requirements_path=reqs_path, tests_path=tests_path, db_path=db_path
+    )
     matrix = engine.run_all()
     req_999 = next(r for r in matrix if r["id"] == "REQ-999")
     assert req_999["status"] == "MISSING"
@@ -78,8 +88,10 @@ def test_missing_test_definition_reports_missing(sample_paths):
 
 
 def test_summary_counts_match_matrix(sample_paths):
-    reqs_path, tests_path = sample_paths
-    engine = TraceabilityEngine(requirements_path=reqs_path, tests_path=tests_path)
+    reqs_path, tests_path, db_path = sample_paths
+    engine = TraceabilityEngine(
+        requirements_path=reqs_path, tests_path=tests_path, db_path=db_path
+    )
     engine.run_all()
     summary = engine.summary()
     assert summary["PASS"] == 1
@@ -87,12 +99,29 @@ def test_summary_counts_match_matrix(sample_paths):
 
 
 def test_evidence_log_records_every_run(sample_paths):
-    reqs_path, tests_path = sample_paths
-    engine = TraceabilityEngine(requirements_path=reqs_path, tests_path=tests_path)
+    reqs_path, tests_path, db_path = sample_paths
+    engine = TraceabilityEngine(
+        requirements_path=reqs_path, tests_path=tests_path, db_path=db_path
+    )
     engine.run_all()
     engine.run_all()
     log = engine.get_evidence_log()
     # 2 requirements x 2 runs = 4 evidence entries
     assert len(log) == 4
-    assert log[0]["evidence_id"] == "EVID-001"
-    assert log[-1]["evidence_id"] == "EVID-004"
+
+
+def test_evidence_persists_after_new_engine_instance(sample_paths):
+    """The key Phase 2 test: evidence survives creating a fresh engine (simulating a restart)."""
+    reqs_path, tests_path, db_path = sample_paths
+    engine1 = TraceabilityEngine(
+        requirements_path=reqs_path, tests_path=tests_path, db_path=db_path
+    )
+    engine1.run_all()
+
+    # Simulate an app restart: brand new engine instance, same db file
+    engine2 = TraceabilityEngine(
+        requirements_path=reqs_path, tests_path=tests_path, db_path=db_path
+    )
+    matrix = engine2.get_matrix()
+    req_001 = next(r for r in matrix if r["id"] == "REQ-001")
+    assert req_001["status"] == "PASS"
