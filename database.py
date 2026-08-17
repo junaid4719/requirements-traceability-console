@@ -2,6 +2,9 @@
 Database layer for the Traceability Console.
 Stores every evidence record permanently in a local SQLite file,
 so run history survives restarts instead of living only in memory.
+Supports many-to-many linking: a requirement can have several
+linked tests, so evidence lookups are filtered by both req_id
+and test_ref.
 """
 
 import sqlite3
@@ -54,17 +57,26 @@ def get_all_evidence(db_path):
     return [dict(row) for row in rows]
 
 
-def get_latest_evidence_for(db_path, req_id):
-    """Return the most recent evidence record for a given requirement, or None."""
+def get_latest_evidence_for(db_path, req_id, test_ref):
+    """Return the most recent evidence record for a given requirement + test pair, or None."""
     conn = get_connection(db_path)
-    row = conn.execute(
+    if test_ref is None:
+        query = """
+            SELECT * FROM evidence
+            WHERE req_id = ? AND test_ref IS NULL
+            ORDER BY evidence_id DESC
+            LIMIT 1
         """
-        SELECT * FROM evidence
-        WHERE req_id = ?
-        ORDER BY evidence_id DESC
-        LIMIT 1
-        """,
-        (req_id,),
-    ).fetchone()
+        params = (req_id,)
+    else:
+        query = """
+            SELECT * FROM evidence
+            WHERE req_id = ? AND test_ref = ?
+            ORDER BY evidence_id DESC
+            LIMIT 1
+        """
+        params = (req_id, test_ref)
+
+    row = conn.execute(query, params).fetchone()
     conn.close()
     return dict(row) if row else None

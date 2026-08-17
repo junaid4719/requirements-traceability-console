@@ -1,10 +1,13 @@
 """
 Traceability Engine
 ----------------------
-Loads requirements.json and tests.json, runs the linked test function
-for each requirement (from test_requirements.py), and permanently
-records every run as an evidence entry in a local SQLite database —
-so history survives restarts, not just the current session.
+Loads requirements.json and tests.json, runs the linked test(s) for
+each requirement (from test_requirements.py), and permanently
+records every run as an evidence entry in a local SQLite database.
+Supports many-to-many linking: one requirement can reference several
+tests, and one test can be shared across several requirements.
+Also detects orphans — requirements with no linked test, and tests
+that no requirement references.
 """
 
 import json
@@ -53,29 +56,51 @@ class TraceabilityEngine:
             except Exception as e:
                 return {"status": "ERROR", "error": f"{type(e).__name__}: {e}"}
 
+    def _rollup_status(self, statuses):
+        """Combine multiple test statuses into one overall status for a requirement."""
+        if not statuses:
+            return "MISSING"
+        if "MISSING" in statuses:
+            return "MISSING"
+        if "ERROR" in statuses:
+            return "ERROR"
+        if "FAIL" in statuses:
+            return "FAIL"
+        return "PASS"
+
     def run_all(self):
-        """Run every requirement's linked test and permanently record the result."""
+        """Run every requirement's linked test(s) and permanently record each result."""
         now = datetime.now().isoformat(timespec="seconds")
         for req in self.requirements:
-            test_ref = req.get("test_ref")
-            test_def = self.tests_by_id.get(test_ref)
+            test_refs = req.get("test_refs", [])
+            for test_ref in test_refs:
+                test_def = self.tests_by_id.get(test_ref)
+                if test_def is None:
+                    outcome = {
+                        "status": "MISSING",
+                        "error": f"No test definition for {test_ref}",
+                    }
+                else:
+                    outcome = self._run_single_test(test_def["function"])
 
-            if test_def is None:
-                outcome = {
-                    "status": "MISSING",
-                    "error": f"No test definition for {test_ref}",
-                }
-            else:
-                outcome = self._run_single_test(test_def["function"])
+                database.insert_evidence(
+                    self.db_path,
+                    req_id=req["id"],
+                    test_ref=test_ref,
+                    status=outcome["status"],
+                    error=outcome["error"],
+                    timestamp=now,
+                )
 
-            database.insert_evidence(
-                self.db_path,
-                req_id=req["id"],
-                test_ref=test_ref,
-                status=outcome["status"],
-                error=outcome["error"],
-                timestamp=now,
-            )
+            if not test_refs:
+                database.insert_evidence(
+                    self.db_path,
+                    req_id=req["id"],
+                    test_ref=None,
+                    status="MISSING",
+                    error="No test linked to this requirement",
+                    timestamp=now,
+                )
 
         return self.get_matrix()
 
@@ -86,25 +111,43 @@ class TraceabilityEngine:
         """Return the full traceability matrix: requirements joined with their latest evidence."""
         matrix = []
         for req in self.requirements:
-            latest = database.get_latest_evidence_for(self.db_path, req["id"])
-            if latest is None:
-                status, error, last_run, evidence_id = "NOT RUN", None, None, None
+            test_refs = req.get("test_refs", [])
+
+            if test_refs:
+                latest_records = [
+                    database.get_latest_evidence_for(self.db_path, req["id"], test_ref)
+                    for test_ref in test_refs
+                ]
             else:
-                status = latest["status"]
-                error = latest["error"]
-                last_run = latest["timestamp"]
-                evidence_id = self._format_evidence_id(latest["evidence_id"])
+                orphan_record = database.get_latest_evidence_for(
+                    self.db_path, req["id"], None
+                )
+                latest_records = [orphan_record] if orphan_record else []
+
+            latest_records = [r for r in latest_records if r is not None]
+
+            if not latest_records:
+                status, error, last_run, evidence_ids = "NOT RUN", None, None, []
+            else:
+                statuses = [r["status"] for r in latest_records]
+                status = self._rollup_status(statuses)
+                errors = [r["error"] for r in latest_records if r["error"]]
+                error = "; ".join(errors) if errors else None
+                last_run = max(r["timestamp"] for r in latest_records)
+                evidence_ids = [
+                    self._format_evidence_id(r["evidence_id"]) for r in latest_records
+                ]
 
             matrix.append(
                 {
                     "id": req["id"],
                     "description": req["description"],
                     "category": req["category"],
-                    "test_ref": req.get("test_ref"),
+                    "test_refs": test_refs,
                     "status": status,
                     "error": error,
                     "last_run": last_run,
-                    "evidence_id": evidence_id,
+                    "evidence_ids": evidence_ids,
                 }
             )
         return matrix
@@ -123,3 +166,22 @@ class TraceabilityEngine:
         for entry in raw_log:
             entry["evidence_id"] = self._format_evidence_id(entry["evidence_id"])
         return raw_log
+
+    def get_orphans(self):
+        """Detect orphan requirements (no linked test) and orphan tests (linked by nothing)."""
+        orphan_requirements = [
+            req["id"] for req in self.requirements if not req.get("test_refs")
+        ]
+
+        referenced_test_ids = set()
+        for req in self.requirements:
+            referenced_test_ids.update(req.get("test_refs", []))
+
+        orphan_tests = [
+            test["id"] for test in self.tests if test["id"] not in referenced_test_ids
+        ]
+
+        return {
+            "orphan_requirements": orphan_requirements,
+            "orphan_tests": orphan_tests,
+        }

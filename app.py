@@ -2,9 +2,10 @@
 Traceability Dashboard — Flask App
 -------------------------------------
 Serves a live requirements traceability matrix. Requirements are
-loaded from requirements.json, each linked to a real test function
-in test_requirements.py. The dashboard shows pass/fail status per
-requirement and lets you re-run all tests live from the browser.
+loaded from requirements.json, each linked to one or more real test
+functions in test_requirements.py. The dashboard shows pass/fail
+status per requirement, orphan warnings, and lets you re-run all
+tests live from the browser.
 """
 
 from flask import Flask, jsonify, render_template
@@ -26,18 +27,20 @@ def api_matrix():
         {
             "matrix": engine.get_matrix(),
             "summary": engine.summary(),
+            "orphans": engine.get_orphans(),
         }
     )
 
 
 @app.route("/api/run", methods=["POST"])
 def api_run():
-    """Re-run every requirement's linked test and return fresh results."""
+    """Re-run every requirement's linked test(s) and return fresh results."""
     matrix = engine.run_all()
     return jsonify(
         {
             "matrix": matrix,
             "summary": engine.summary(),
+            "orphans": engine.get_orphans(),
         }
     )
 

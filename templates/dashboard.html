@@ -19,6 +19,7 @@
     --pass: #3ddc84;
     --fail: #ff5c5c;
     --error: #ffb454;
+    --warn: #ffb454;
 
     --mono: "Courier New", Consolas, monospace;
   }
@@ -123,6 +124,27 @@
     margin: 0 auto;
   }
 
+  .orphan-banner {
+    display: none;
+    border: 1px solid var(--warn);
+    background: rgba(255, 180, 84, 0.06);
+    border-radius: 3px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    font-size: 12px;
+  }
+  .orphan-banner.visible { display: block; }
+  .orphan-banner .title {
+    color: var(--warn);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-size: 11px;
+    margin-bottom: 6px;
+  }
+  .orphan-banner .line { color: var(--text); margin-top: 3px; }
+  .orphan-banner .line span { color: var(--warn); font-weight: 700; }
+
   .matrix-caption {
     display: flex;
     justify-content: space-between;
@@ -175,8 +197,9 @@
     border-radius: 2px;
   }
 
-  .test-id { font-size: 12px; color: var(--dim); }
+  .test-id { font-size: 12px; color: var(--dim); display: block; }
   .test-id::before { content: "\2192 "; color: var(--cyan-dim); }
+  .test-id-none { font-size: 12px; color: var(--warn); }
 
   .status-pill {
     display: inline-block;
@@ -230,6 +253,11 @@
 <div class="summary-strip" id="summary-strip"></div>
 
 <main>
+  <div class="orphan-banner" id="orphan-banner">
+    <div class="title">Coverage warnings</div>
+    <div id="orphan-content"></div>
+  </div>
+
   <div class="matrix-caption">
     <span>traceability_matrix.log</span>
     <span id="last-run">no run yet</span>
@@ -239,7 +267,7 @@
     <thead>
       <tr>
         <th>Requirement</th>
-        <th>Linked Test</th>
+        <th>Linked Tests</th>
         <th>Status</th>
         <th>Last Run</th>
       </tr>
@@ -255,6 +283,8 @@
   const matrixBody = document.getElementById("matrix-body");
   const summaryStrip = document.getElementById("summary-strip");
   const lastRunLabel = document.getElementById("last-run");
+  const orphanBanner = document.getElementById("orphan-banner");
+  const orphanContent = document.getElementById("orphan-content");
 
   function renderSummary(summary) {
     const order = [
@@ -273,6 +303,26 @@
       .join("");
   }
 
+  function renderOrphans(orphans) {
+    const hasOrphanReqs = orphans.orphan_requirements && orphans.orphan_requirements.length > 0;
+    const hasOrphanTests = orphans.orphan_tests && orphans.orphan_tests.length > 0;
+
+    if (!hasOrphanReqs && !hasOrphanTests) {
+      orphanBanner.classList.remove("visible");
+      return;
+    }
+
+    let html = "";
+    if (hasOrphanReqs) {
+      html += `<div class="line">Requirements with no linked test: <span>${orphans.orphan_requirements.join(", ")}</span></div>`;
+    }
+    if (hasOrphanTests) {
+      html += `<div class="line">Tests not referenced by any requirement: <span>${orphans.orphan_tests.join(", ")}</span></div>`;
+    }
+    orphanContent.innerHTML = html;
+    orphanBanner.classList.add("visible");
+  }
+
   function renderMatrix(matrix) {
     matrixBody.innerHTML = matrix
       .map((row) => {
@@ -280,6 +330,9 @@
         const errorHtml = row.error
           ? `<span class="error-text">${row.error}</span>`
           : "";
+        const testsHtml = row.test_refs && row.test_refs.length > 0
+          ? row.test_refs.map((t) => `<span class="test-id">${t}</span>`).join("")
+          : `<span class="test-id-none">none linked</span>`;
         return `
           <tr>
             <td>
@@ -287,7 +340,7 @@
               <div class="req-desc">${row.description}</div>
               <div class="req-cat">${row.category}</div>
             </td>
-            <td><span class="test-id">${row.test_ref}</span></td>
+            <td>${testsHtml}</td>
             <td>
               <span class="status-pill status-${statusClass}">${row.status}</span>
               ${errorHtml}
@@ -304,6 +357,7 @@
     const data = await res.json();
     renderSummary(data.summary);
     renderMatrix(data.matrix);
+    renderOrphans(data.orphans);
   }
 
   async function runAll() {
@@ -314,6 +368,7 @@
       const data = await res.json();
       renderSummary(data.summary);
       renderMatrix(data.matrix);
+      renderOrphans(data.orphans);
       const now = new Date().toLocaleTimeString();
       lastRunLabel.textContent = `last run: ${now}`;
     } finally {

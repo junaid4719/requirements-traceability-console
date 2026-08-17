@@ -3,42 +3,42 @@
     "id": "REQ-001",
     "description": "Engine temperature must not exceed 110°C under normal operating conditions.",
     "category": "Powertrain Safety",
-    "test_ref": "TEST-001"
+    "test_refs": ["TEST-001"]
   },
   {
     "id": "REQ-002",
     "description": "Engine RPM must not exceed 6500 under normal operating conditions.",
     "category": "Powertrain Safety",
-    "test_ref": "TEST-002"
+    "test_refs": ["TEST-002"]
   },
   {
     "id": "REQ-003",
     "description": "Battery voltage must remain within 11.5V–14.8V during operation.",
     "category": "Electrical Systems",
-    "test_ref": "TEST-003"
+    "test_refs": ["TEST-003"]
   },
   {
     "id": "REQ-004",
     "description": "The system must detect and report every out-of-range sensor reading in a log file, with no false negatives.",
     "category": "Fault Detection",
-    "test_ref": "TEST-004"
+    "test_refs": ["TEST-004", "TEST-007"]
   },
   {
     "id": "REQ-005",
     "description": "The system must not raise a fault for a log file containing entirely valid readings.",
     "category": "Fault Detection",
-    "test_ref": "TEST-005"
+    "test_refs": ["TEST-005"]
   },
   {
     "id": "REQ-006",
     "description": "The system must continue operating without crashing if a log file is missing or unreadable.",
     "category": "Reliability",
-    "test_ref": "TEST-006"
+    "test_refs": ["TEST-006"]
   },
   {
     "id": "REQ-007",
     "description": "Every fault detected must be traceable to a specific row and timestamp in the source log.",
     "category": "Traceability",
-    "test_ref": "TEST-007"
+    "test_refs": ["TEST-007"]
   }
 ]
