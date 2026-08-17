@@ -4,3 +4,4 @@ fault_report.txt
 log_analyser.log
 thresholds.json
 traceability.db
+traceability-report.json

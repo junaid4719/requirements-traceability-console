@@ -44,3 +44,27 @@ jobs:
         run: |
           pip install bandit
           bandit -r . --exclude ./__pycache__,./test_requirements.py,./test_traceability_engine.py
+
+      - name: Generate traceability evidence report
+        run: python generate_report.py
+
+      - name: Package release bundle
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: |
+          mkdir release-bundle
+          cp traceability-report.json release-bundle/
+          zip -r requirements-traceability-console-${{ github.run_number }}.zip . -x "release-bundle/*" ".git/*" "__pycache__/*" ".pytest_cache/*"
+          mv requirements-traceability-console-${{ github.run_number }}.zip release-bundle/
+
+      - name: Create GitHub Release
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: run-${{ github.run_number }}
+          name: Automated release (run ${{ github.run_number }})
+          files: |
+            traceability-report.json
+            release-bundle/requirements-traceability-console-${{ github.run_number }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
