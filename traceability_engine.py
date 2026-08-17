@@ -155,7 +155,13 @@ class TraceabilityEngine:
     def summary(self):
         """Return pass/fail counts across the current matrix."""
         matrix = self.get_matrix()
-        counts = {"PASS": 0, "FAIL": 0, "ERROR": 0, "MISSING": 0, "NOT RUN": 0}
+        counts = {
+            "PASS": 0,
+            "FAIL": 0,
+            "ERROR": 0,
+            "MISSING": 0,
+            "NOT RUN": 0,
+        }  # nosec B105 - not a password, just a status counter dict
         for row in matrix:
             counts[row["status"]] = counts.get(row["status"], 0) + 1
         return counts

@@ -39,3 +39,8 @@ jobs:
         run: |
           pip install pip-audit
           pip-audit -r requirements.txt
+
+      - name: Scan source code for security issues with Bandit
+        run: |
+          pip install bandit
+          bandit -r . --exclude ./__pycache__,./test_requirements.py,./test_traceability_engine.py
